@@ -19,7 +19,7 @@ if (!CDP_API_KEY_ID || !CDP_API_KEY_SECRET) {
 // ─── ENV ───────────────────────────────────────────────────
 const PORT = Number(process.env.PORT) || 4021;
 const RECEIVER = (process.env.X402_PAY_TO ?? "") as `0x${string}`;
-const NETWORK = (process.env.NETWORK || "base-sepolia") as Network;
+const NETWORK = (process.env.X402_NETWORK || "base-sepolia") as Network;
 const FACILITATOR_URL = process.env.FACILITATOR_URL;
 const PRICE = process.env.TW_FOLLOW_PRICE || "$0.10";
 const ASSET = process.env.X402_ASSET || "USDC";
