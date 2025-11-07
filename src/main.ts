@@ -38,50 +38,50 @@ const facilitatorOption: FacilitatorConfig | undefined = FACILITATOR_URL
   ? { url: FACILITATOR_URL as `${string}://${string}` }
   : mainnetFacilitator; // hoặc undefined
 
-// app.use(
-//   paymentMiddleware(
-//     RECEIVER,
-//     {
-//       "POST /x402/twitter/following": {
-//         price: PRICE,
-//         network: NETWORK,
-//         config: {
-//           discoverable: true,
-//           description: "Checks if one Twitter X account follows another on X.",
+app.use(
+  paymentMiddleware(
+    RECEIVER,
+    {
+      "POST /x402/twitter/following": {
+        price: PRICE,
+        network: NETWORK,
+        config: {
+          discoverable: true,
+          description: "Checks if one Twitter X account follows another on X.",
 
-//           inputSchema: {
-//             bodyType: "json",
-//             bodyFields: {
-//               source_username: {
-//                 type: "string",
-//                 required: true,
-//                 description: "Twitter username of the follower", // ✅ hợp lệ
-//               },
-//               target_username: {
-//                 type: "string",
-//                 required: true,
-//                 description: "Twitter username of the account being followed", // ✅ hợp lệ
-//               },
-//             },
-//           },
+          inputSchema: {
+            bodyType: "json",
+            bodyFields: {
+              source_username: {
+                type: "string",
+                required: true,
+                description: "Twitter username of the follower",
+              },
+              target_username: {
+                type: "string",
+                required: true,
+                description: "Twitter username of the account being followed",
+              },
+            },
+          },
 
-//           outputSchema: {
-//             type: "object",
-//             properties: {
-//               follow: {
-//                 type: "boolean",
-//                 description:
-//                   "True if the source account follows the target account",
-//               },
-//             },
-//             example: { follow: true },
-//           },
-//         },
-//       },
-//     },
-//     facilitatorOption
-//   )
-// );
+          outputSchema: {
+            type: "object",
+            properties: {
+              follow: {
+                type: "boolean",
+                description:
+                  "True if the source account follows the target account",
+              },
+            },
+            example: { follow: true },
+          },
+        },
+      },
+    },
+    facilitatorOption
+  )
+);
 
 // ─── Schema ────────────────────────────────────────────────
 const FollowCheckSchema = z.object({
