@@ -46,7 +46,7 @@ app.use(
         price: PRICE,
         network: NETWORK,
         config: {
-          discoverable: true,
+          discoverable: false,
           description: "Checks if one Twitter X account follows another on X.",
 
           inputSchema: {
