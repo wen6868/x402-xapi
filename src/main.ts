@@ -220,7 +220,6 @@ app.get("/", (_req: Request, res: Response) => {
     <img src="${IMG}" alt="Twitter X Verification cover" style="max-width:100%;border-radius:12px;margin-top:28px;" />
     <section style="margin-top:32px;opacity:.9">
       <code>POST /x402/twitter/following</code> — Paid via x402<br/>
-      <code>GET /health</code> — Free health check
     </section>
   </main>
 </body>
@@ -229,6 +228,7 @@ app.get("/", (_req: Request, res: Response) => {
   res.set("Cache-Control", "public, max-age=300");
   res.status(200).type("html").send(html);
 });
+//      <code>GET /health</code> — Free health check
 
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
