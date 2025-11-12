@@ -156,14 +156,71 @@ app.get("/health", (_req: Request, res: Response) => {
 });
 
 // ─── Root ─────────────────────────────────────────────────
-app.get("/", (_req, res) => {
-  res.send(
-    `<h3>x402-xapi</h3>
-     <ul>
-       <li>POST <code>/x402/twitter/following</code> – Paid via x402</li>
-       <li>GET <code>/health</code> – Free health check</li>
-     </ul>`
-  );
+// ... các import & config phía trên giữ nguyên
+const BASE_URL = process.env.BASE_URL || "https://x402-xapi.onrender.com";
+
+app.use(
+  "/assets",
+  express.static("public/assets", { maxAge: "30d", immutable: true })
+);
+
+app.get("/", (_req: Request, res: Response) => {
+  const url = `${BASE_URL}/`;
+  const img = `${BASE_URL}/assets/twitterx_thumbnail_icon.png`;
+
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Twitter X Verification — Verify Follows via API | x402scan</title>
+<meta name="description" content="Twitter X Verification instantly checks if one X (Twitter) account follows another via API. Ideal for airdrop tasks, campaign verification, and gated systems." />
+<meta name="keywords" content="twitter verification, x verification, verify follow, proof of follow, twitter api, x api, airdrop verification, x402, x402scan" />
+<meta name="author" content="x402scan Team" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="${url}" />
+<meta property="og:title" content="Twitter X Verification — Verify Follows via API" />
+<meta property="og:description" content="Check if users follow specific Twitter/X accounts instantly. Powered by x402scan." />
+<meta property="og:image" content="${img}" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content="${url}" />
+<meta name="twitter:title" content="Twitter X Verification — Verify Follows via API" />
+<meta name="twitter:description" content="Check if one Twitter/X account follows another — simple API for campaigns and quests." />
+<meta name="twitter:image" content="${img}" />
+
+<link rel="canonical" href="${url}" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0A0E14" />
+
+<!-- Favicons -->
+<link rel="icon" href="${BASE_URL}/assets/twitterx_thumbnail_icon.png" type="image/png" />
+<link rel="shortcut icon" href="${BASE_URL}/assets/twitterx_verification_icon.png" type="image/png" />
+<link rel="apple-touch-icon" href="${BASE_URL}/assets/twitterx_thumbnail_icon.png" />
+
+</head>
+<body style="margin:0;background:#0A0E14;color:#FFF;font-family:system-ui,Roboto,Inter,Helvetica,Arial,sans-serif;">
+  <main style="max-width:900px;margin:48px auto;padding:0 20px;">
+    <h1 style="font-size:2.5rem;margin-bottom:0.5em;">Twitter X Verification</h1>
+    <p style="opacity:0.85;max-width:720px;">
+      Instantly verify if one Twitter/X account follows another via API and webhook.<br/>
+      Built on x402scan — ideal for airdrops, quests, or gated access systems.
+    </p>
+    <img src="${img}" alt="Twitter X Verification cover" style="max-width:100%;border-radius:12px;margin-top:28px;" />
+    <section style="margin-top:32px;opacity:.9">
+      <code>POST /x402/twitter/following</code> — Paid via x402<br/>
+      <code>GET /health</code> — Free health check
+    </section>
+  </main>
+</body>
+</html>`;
+
+  res.set("Cache-Control", "public, max-age=300");
+  res.status(200).type("html").send(html);
 });
 
 app.listen(PORT, () => {
