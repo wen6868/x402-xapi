@@ -1,11 +1,27 @@
 import "dotenv/config";
 import express, { Request, Response } from "express";
+import cors from "cors";
 import { z } from "zod";
 import { Network, paymentMiddleware } from "x402-express";
 import { facilitator as mainnetFacilitator } from "@coinbase/x402";
 import { FacilitatorConfig } from "x402/types";
 
 const app = express();
+
+// ─── CORS Configuration ────────────────────────────────────────
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim())
+  : ["http://localhost:3000", "http://localhost:3001"];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(express.json());
 
 // ─── Configure CDP keys ───────────────────────────────────────────
@@ -174,56 +190,7 @@ app.get("/", (_req: Request, res: Response) => {
   const KW =
     "twitter verification, x verification, verify follow, proof of follow, twitter api, x api, airdrop verification, x402, x402scan";
 
-  const html = `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-<!-- Primary -->
-<title>${TITLE}</title>
-<meta name="title" content="${TITLE}" />
-<meta name="description" content="${DESC}" />
-<meta name="keywords" content="${KW}" />
-<meta name="author" content="x402scan Team" />
-
-<!-- Open Graph -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content="${URL}" />
-<meta property="og:title" content="${TITLE}" />
-<meta property="og:description" content="${DESC}" />
-<meta property="og:image" content="${IMG}" />
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:url" content="${URL}" />
-<meta name="twitter:title" content="${TITLE}" />
-<meta name="twitter:description" content="${DESC}" />
-<meta name="twitter:image" content="${IMG}" />
-
-<link rel="canonical" href="${URL}" />
-<meta name="robots" content="index, follow" />
-<meta name="theme-color" content="#0A0E14" />
-
-<!-- Favicons -->
-<link rel="icon" href="${ICON}" type="image/png" />
-<link rel="shortcut icon" href="${ICON}" type="image/png" />
-<link rel="apple-touch-icon" href="${ICON}" />
-</head>
-<body style="margin:0;background:#0A0E14;color:#FFF;font-family:system-ui,Roboto,Inter,Helvetica,Arial,sans-serif;">
-  <main style="max-width:900px;margin:48px auto;padding:0 20px;">
-    <h1 style="font-size:2.5rem;margin-bottom:0.5em;">Twitter X Verification</h1>
-    <p style="opacity:0.85;max-width:720px;">
-      Instantly verify if one Twitter/X account follows another via API and webhook.<br/>
-      Built on x402scan — ideal for airdrops, quests, or gated access systems.
-    </p>
-    <img src="${IMG}" alt="Twitter X Verification cover" style="max-width:100%;border-radius:12px;margin-top:28px;" />
-    <section style="margin-top:32px;opacity:.9">
-      <code>POST /x402/twitter/following</code> — Paid via x402<br/>
-    </section>
-  </main>
-</body>
-</html>`;
+  const html = `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8" />\n<meta name="viewport" content="width=device-width, initial-scale=1" />\n\n<!-- Primary -->\n<title>${TITLE}</title>\n<meta name="title" content="${TITLE}" />\n<meta name="description" content="${DESC}" />\n<meta name="keywords" content="${KW}" />\n<meta name="author" content="x402scan Team" />\n\n<!-- Open Graph -->\n<meta property="og:type" content="website" />\n<meta property="og:url" content="${URL}" />\n<meta property="og:title" content="${TITLE}" />\n<meta property="og:description" content="${DESC}" />\n<meta property="og:image" content="${IMG}" />\n\n<!-- Twitter -->\n<meta name="twitter:card" content="summary_large_image" />\n<meta name="twitter:url" content="${URL}" />\n<meta name="twitter:title" content="${TITLE}" />\n<meta name="twitter:description" content="${DESC}" />\n<meta name="twitter:image" content="${IMG}" />\n\n<link rel="canonical" href="${URL}" />\n<meta name="robots" content="index, follow" />\n<meta name="theme-color" content="#0A0E14" />\n\n<!-- Favicons -->\n<link rel="icon" href="${ICON}" type="image/png" />\n<link rel="shortcut icon" href="${ICON}" type="image/png" />\n<link rel="apple-touch-icon" href="${ICON}" />\n</head>\n<body style="margin:0;background:#0A0E14;color:#FFF;font-family:system-ui,Roboto,Inter,Helvetica,Arial,sans-serif;">\n  <main style="max-width:900px;margin:48px auto;padding:0 20px;">\n    <h1 style="font-size:2.5rem;margin-bottom:0.5em;">Twitter X Verification</h1>\n    <p style="opacity:0.85;max-width:720px;">\n      Instantly verify if one Twitter/X account follows another via API and webhook.<br/>\n      Built on x402scan — ideal for airdrops, quests, or gated access systems.\n    </p>\n    <img src="${IMG}" alt="Twitter X Verification cover" style="max-width:100%;border-radius:12px;margin-top:28px;" />\n    <section style="margin-top:32px;opacity:.9">\n      <code>POST /x402/twitter/following</code> — Paid via x402<br/>\n    </section>\n  </main>\n</body>\n</html>`;
 
   res.set("Cache-Control", "public, max-age=300");
   res.status(200).type("html").send(html);
